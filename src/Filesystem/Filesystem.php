@@ -129,6 +129,26 @@ class Filesystem extends FilesystemBase
     }
 
     /**
+     * Retrieves the maximum file upload size allowed by the server configuration.
+     * Compares `upload_max_filesize` and `post_max_size` and returns the smaller value.
+     *
+     * @return string The maximum upload size in bytes as a string.
+     */
+    public function getMaxUploadSize(): string
+    {
+        // Get `upload_max_filesize` and `post_max_size` from PHP configuration
+        $uploadMaxSize = ini_get('upload_max_filesize');
+        $postMaxSize = ini_get('post_max_size');
+
+        // Convert both values to bytes using sizeToBytes
+        $uploadMaxSizeBytes = $this->sizeToBytes($uploadMaxSize);
+        $postMaxSizeBytes = $this->sizeToBytes($postMaxSize);
+
+        // Compare as floats and return the smaller value as a string
+        return (float) $uploadMaxSizeBytes > (float) $postMaxSizeBytes ? $postMaxSizeBytes : $uploadMaxSizeBytes;
+    }
+
+    /**
      * Returns a public file path from an absolute path.
      *
      * Eg: `/home/mysite/public_html/welcome` -> `/welcome`
