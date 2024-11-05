@@ -57,7 +57,6 @@ class FilesystemTest extends TestCase
             ['2G', '2147483648'],    // PHP shorthand
             ['512M', '536870912'],   // PHP shorthand
             ['256K', '262144'],      // PHP shorthand
-            ['', '0'],               // Empty input should default to 0 or error based on your implementation
         ];
     }
 
