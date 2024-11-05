@@ -103,16 +103,20 @@ class Filesystem extends FilesystemBase
             switch ($unit) {
                 case 'gb':
                 case 'g':
-                    $value = ($value * 1024 * 1024 * 1024);
+                    $value *= 1024 * 1024 * 1024;
+                    break;
                 case 'mb':
                 case 'm':
-                    $value = ($value * 1024 * 1024);
+                    $value *= 1024 * 1024;
+                    break;
                 case 'kb':
                 case 'k':
-                    $value = ($value * 1024);
+                    $value *= 1024;
+                    break;
                 case 'byte':
                 case 'bytes':
-                    $value = $value;
+                    // No multiplication needed; already in bytes
+                    break;
                 default:
                     throw new \InvalidArgumentException("Unknown size unit '$unit'");
             }
@@ -122,7 +126,6 @@ class Filesystem extends FilesystemBase
 
         throw new \InvalidArgumentException("Invalid size format '$size'");
     }
-
 
     /**
      * Returns a public file path from an absolute path.
