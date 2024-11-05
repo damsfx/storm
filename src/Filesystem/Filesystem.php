@@ -86,6 +86,45 @@ class Filesystem extends FilesystemBase
     }
 
     /**
+     * Converts a file size string (e.g., "1 GB", "500 MB", "512K", "2M") to bytes.
+     * Returns the result as a string to handle large sizes safely.
+     * @throws InvalidArgumentException if it is unable to parse the provided string
+     */
+    public function sizeToBytes(string $size): string
+    {
+        // Trim whitespace and convert to lowercase for consistency
+        $size = strtolower(trim($size));
+
+        // Regular expression to match both human-readable (e.g., "1 GB") and PHP shorthand (e.g., "1G")
+        if (preg_match('/^(\d+(?:\.\d+)?)\s*(gb|g|mb|m|kb|k|bytes|byte)?$/', $size, $matches)) {
+            $value = (float) $matches[1]; // Numeric part of the size
+            $unit = $matches[2] ?? 'bytes'; // Default to bytes if no unit is provided
+
+            switch ($unit) {
+                case 'gb':
+                case 'g':
+                    $value = ($value * 1024 * 1024 * 1024);
+                case 'mb':
+                case 'm':
+                    $value = ($value * 1024 * 1024);
+                case 'kb':
+                case 'k':
+                    $value = ($value * 1024);
+                case 'byte':
+                case 'bytes':
+                    $value = $value;
+                default:
+                    throw new \InvalidArgumentException("Unknown size unit '$unit'");
+            }
+
+            return (string) $value;
+        }
+
+        throw new \InvalidArgumentException("Invalid size format '$size'");
+    }
+
+
+    /**
      * Returns a public file path from an absolute path.
      *
      * Eg: `/home/mysite/public_html/welcome` -> `/welcome`
