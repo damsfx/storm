@@ -2,9 +2,10 @@
 
 use DirectoryIterator;
 use FilesystemIterator;
+use Illuminate\Filesystem\Filesystem as FilesystemBase;
+use InvalidArgumentException;
 use ReflectionClass;
 use Winter\Storm\Support\Facades\Config;
-use Illuminate\Filesystem\Filesystem as FilesystemBase;
 
 /**
  * File helper
@@ -118,13 +119,13 @@ class Filesystem extends FilesystemBase
                     // No multiplication needed; already in bytes
                     break;
                 default:
-                    throw new \InvalidArgumentException("Unknown size unit '$unit'");
+                    throw new InvalidArgumentException("Unknown size unit '$unit'");
             }
 
             return (string) $value;
         }
 
-        throw new \InvalidArgumentException("Invalid size format '$size'");
+        throw new InvalidArgumentException("Invalid size format '$size'");
     }
 
     /**
